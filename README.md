@@ -1,4 +1,4 @@
-# <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**Model 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
+# <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**BDS MODULE 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
 
 ## Group members
 | Name                     | Student ID |
@@ -31,3 +31,12 @@ API:
 ### Training Pipeline
 
 ### Inference Pipeline
+
+## Data:
+The data you will use comes from three different sources:
+
+- Electricity prices in Denmark per day from [Energinet](https://www.energidataservice.dk).
+- Different meteorological observations from [Open meteo](https://www.open-meteo.com).
+- Danish Calendar with the type if the date is a national holiday or not. This files is made manually by the group and is located in the "*data*" folder inside this repository.
+
+See corresponding functions in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features).
