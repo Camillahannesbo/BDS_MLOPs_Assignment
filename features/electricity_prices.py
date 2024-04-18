@@ -76,6 +76,9 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     # Converting column names to lowercase for consistency
     electricity_prices.columns = list(map(str.lower, electricity_prices.columns))
 
+    # Replace spaces in column names with underscores
+    electricity_prices.columns = electricity_prices.columns.str.replace(' ', '_')
+
     return electricity_prices
 
 def forecast_renewable_energy(historical: bool = False, area: str = None, start: str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"), end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
@@ -161,5 +164,8 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
 
     # Converting column names to lowercase for consistency
     forecast_renewable_energy.columns = list(map(str.lower, forecast_renewable_energy.columns))
+
+    # Replace spaces in column names with underscores
+    forecast_renewable_energy.columns = forecast_renewable_energy.columns.str.replace(' ', '_')
 
     return forecast_renewable_energy
