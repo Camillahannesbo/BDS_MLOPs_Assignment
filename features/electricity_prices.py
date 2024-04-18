@@ -1,16 +1,16 @@
 import requests
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import pandas as pd
 
 
-def electricity_prices(historical: bool = False, area: str = None, start: str = '2022-01-01', end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
+def electricity_prices(historical: bool = False, area: list = None, start: str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"), end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
     """
     Fetches electricity prices from Energinet (Dataservice API).
 
     Parameters:
     - historical (bool): If True, fetches historical data from start date to end date. If False, fetches data for the current day. Default is False.
-    - start (str): Define a start date for the API call. Defaul is 2022-01-01.
-    - end (str): Define a end date for the API call. Default is today.
+    - start (str): Define a start date for the API call. Defaul is 'Yesterday'.
+    - end (str): Define a end date for the API call. Default is 'Today'.
     
     Returns:
     - pd.DataFrame: DataFrame with electricity prices for different areas in Denmark (DK1, DK2).
@@ -25,45 +25,67 @@ def electricity_prices(historical: bool = False, area: str = None, start: str = 
                 'sort': 'HourUTC DESC'
             })
 
-    areas = ['DK1', 'DK2']
-    areas_data = {}
-    areas_data[areas[0]] = {}
-
     data = r.json()['records']
+    df = pd.DataFrame(data)
 
-    area_price_list = []
-    for r in data:
-            if r['PriceArea'] in areas:
-                area_price_list.append({"time": r["HourDK"], "PriceArea": r["PriceArea"], "SpotPriceDKK": r['SpotPriceDKK']})
-    df = pd.DataFrame(area_price_list)
-    df["date"] = df["time"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
+    # Format date and time
+    df["date"] = df["HourDK"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
+    df['time'] = pd.to_datetime(df['HourDK'])
+
+    # Dicide the price to KWH
     df['SpotPriceDKK_KWH'] = df['SpotPriceDKK'] / 1000
-    df['time'] = pd.to_datetime(df['time'])
+
+    # Drop unnecessary columns
     df.drop('SpotPriceDKK', axis=1, inplace=True)
 
+    # Filter the df based on the area
     if area is None:
         filtered_df = df
     else:
         filtered_df = df[df['PriceArea'].isin(area)]
 
-    if not historical:
-        today = (date.today()).strftime("%Y-%m-%d")
+    # Filter the df based on the historical parameter
+    today = (date.today()).strftime("%Y-%m-%d")
+    if historical:
+        filtered_df = filtered_df[df.date != today]
+    else:
         filtered_df = filtered_df[df.date == today]
 
+    # Convert time to timestamp
     filtered_df["timestamp"] = filtered_df["time"].astype(int) // 10**6 * 1000
 
-    electricity_prices = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'SpotPriceDKK_KWH']]
+    # Reset the index to avoid duplicate entries
+    filtered_df.reset_index(drop=True, inplace=True)
+
+   # Reorder the datafrate
+    reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'SpotPriceDKK_KWH']]
+
+    # Unpivot DataFrame
+    reordered_df = reordered_df.melt(id_vars=["timestamp", "time", "date", "PriceArea"], var_name="attribute", value_name="value")
+
+    # Combine columns into a single "heading" column
+    reordered_df["heading"] = reordered_df["PriceArea"] + "_" + reordered_df["attribute"]
+
+    # Drop the columns that are no longer needed
+    reordered_df.drop(columns=["PriceArea"], inplace=True)
+    reordered_df.drop(columns=["attribute"], inplace=True)
+
+    # Pivot DataFrame
+    electricity_prices = reordered_df.pivot_table(index=["timestamp", "time", "date"], columns="heading", values="value").reset_index()
+
+    # Converting column names to lowercase for consistency
+    electricity_prices.columns = list(map(str.lower, electricity_prices.columns))
 
     return electricity_prices
 
-def forecast_renewable_energy(historical: bool = False, area: str = None, start: str = '2022-01-01', end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
+def forecast_renewable_energy(historical: bool = False, area: str = None, start: str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"), end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
     """
     Fetches electricity prices from Energinet (Dataservice API).
 
     Parameters:
     - historical (bool): If True, fetches historical data from start date to end date. If False, fetches data for the current day. Default is False.
-    - start (str): Define a start date for the API call. Defaul is 2022-01-01.
-    - end (str): Define a end date for the API call. Default is today.
+    - start (str): Define a start date for the API call. Defaul is 'Yesterday'.
+    - end (str): Define a end date for the API call. Default is 'Today'.
     
     Returns:
     - pd.DataFrame: DataFrame with electricity prices for different areas in Denmark (DK1, DK2).
@@ -76,19 +98,14 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
                 'end': end+'T23:59',
             })
 
-    areas = ['DK1', 'DK2']
-    areas_data = {}
-    areas_data[areas[0]] = {}
-
     data = r.json()['records']
-
-    area_price_list = []
     df = pd.DataFrame(data)
 
+    # Format date and time
     df["date"] = df["HourDK"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
     df['time'] = pd.to_datetime(df['HourDK'])
-    # df['timestampdk'] = pd.to_datetime(df['TimestampDK'])
 
+    # Drop unnecessary columns
     df.drop('Forecast5Hour', axis=1, inplace=True)
     df.drop('Forecast1Hour', axis=1, inplace=True)
     df.drop('HourUTC', axis=1, inplace=True)
@@ -96,17 +113,53 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     df.drop('TimestampDK', axis=1, inplace=True)
     df.drop('TimestampUTC', axis=1, inplace=True)
 
+    # Filter the df based on the area
     if area is None:
         filtered_df = df
     else:
         filtered_df = df[df['PriceArea'].isin(area)]
 
-    if not historical:
-        today = (date.today()).strftime("%Y-%m-%d")
+    # Filter the df based on the historical parameter
+    today = (date.today()).strftime("%Y-%m-%d")
+    if historical:
+        filtered_df = filtered_df[df.date != today]
+    else:
         filtered_df = filtered_df[df.date == today]
 
+    # Convert time to timestamp
     filtered_df["timestamp"] = filtered_df["time"].astype(int) // 10**6 * 1000
 
-    forecast_renewable_energy = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'ForecastType', 'ForecastDayAhead', 'ForecastIntraday', 'ForecastCurrent']]
+    # Divide specified columns by 1000
+    filtered_df["ForecastDayAhead_KWH"] = filtered_df["ForecastDayAhead"] / 1000
+    filtered_df["ForecastIntraday_KWH"] = filtered_df["ForecastIntraday"] / 1000
+    filtered_df["ForecastCurrent_KWH"] = filtered_df["ForecastCurrent"] / 1000
+
+    # Drop unnecessary columns
+    df.drop('ForecastDayAhead', axis=1, inplace=True)
+    df.drop('ForecastIntraday', axis=1, inplace=True)
+    df.drop('ForecastCurrent', axis=1, inplace=True)
+
+    # Reset the index to avoid duplicate entries
+    filtered_df.reset_index(drop=True, inplace=True)
+
+    # Reorder the datafrate
+    reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'ForecastType', 'ForecastDayAhead_KWH', 'ForecastIntraday_KWH', 'ForecastCurrent_KWH']]
+
+    # Unpivot DataFrame
+    reordered_df = reordered_df.melt(id_vars=["timestamp", "time", "date", "PriceArea", "ForecastType"], var_name="attribute", value_name="value")
+
+    # Combine columns into a single "heading" column
+    reordered_df["heading"] = reordered_df["PriceArea"] + "_" + reordered_df["ForecastType"] + "_" + reordered_df["attribute"]
+    
+    # Drop the columns that are no longer needed
+    reordered_df.drop(columns=["PriceArea"], inplace=True)
+    reordered_df.drop(columns=["ForecastType"], inplace=True)
+    reordered_df.drop(columns=["attribute"], inplace=True)
+
+    # Pivot DataFrame
+    forecast_renewable_energy = reordered_df.pivot_table(index=["timestamp", "time", "date"], columns="heading", values="value").reset_index()
+
+    # Converting column names to lowercase for consistency
+    forecast_renewable_energy.columns = list(map(str.lower, forecast_renewable_energy.columns))
 
     return forecast_renewable_energy
