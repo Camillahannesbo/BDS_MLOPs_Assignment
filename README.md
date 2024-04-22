@@ -9,22 +9,21 @@
 
 ---
 
-## Objektives:
-This repository contains all notebooks and local datafiles for the final assigment in the module data engineering and machine learning operations in business (*"MLOPs" in short*)
+## Objectives:
+This repository contains all notebooks and local datafiles for the final assignment in the module data engineering and machine learning operations in business (*"MLOPs" in short*)
 
-The objektives for this assigment is to build a predicting system the electricity prices in Denmark based on weather conditions, previous prices, and the Danish holidays.
+The objective of this assignment is to build a prediction system that predicts the electricity prices in Denmark based on weather conditions, previous prices, and the Danish holidays.
 
 ## Structure:
-There is four notebooks in the folder "*notebooks*":
+There are four notebooks in the folder "*notebooks*":
 
-1. **Feature Backfill**: How to load, engineer and create feature groups.
-2. **Feature Pipeline**: How to parse new data and insert into feature groups.
-3. **Training Pipeline**: How to build a feature view, training dataset split, train a model and save it in the Model Registry.
-4. **Inference Pipeline**: How to retrieve a trained model from the model registry and use it for batch inference.
+1. **Feature Backfill**: Data is loaded and we engineer and create feature groups.
+2. **Feature Pipeline**: New data are parsed and inserted into feature groups.
+3. **Training Pipeline**: Building feature view,  training dataset split, training a model, and saving it in the Model Registry.
+4. **Inference Pipeline**: The trained model is retrieved from the model registry and used for batch inference.
 
 ### Feature Backfill
-
-API: 
+The data is loaded from three different API's, 
 
 ### Feature Pipeline
 
@@ -33,10 +32,10 @@ API:
 ### Inference Pipeline
 
 ## Data:
-The data you will use comes from three different sources:
+The data used comes from three different sources:
 
 - Electricity prices in Denmark per day from [Energinet](https://www.energidataservice.dk).
 - Different meteorological observations from [Open meteo](https://www.open-meteo.com).
-- Danish Calendar with the type if the date is a national holiday or not. This files is made manually by the group and is located in the "*data*" folder inside this repository.
+- Danish Calendar with the type if the date is a national holiday or not. This file is made manually by the group and is located in the "*data*" folder inside this repository.
 
 See corresponding functions in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features).
