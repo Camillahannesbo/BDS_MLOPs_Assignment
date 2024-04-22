@@ -23,11 +23,26 @@ There are four notebooks in the folder "*notebooks*":
 4. **Inference Pipeline**: The trained model is retrieved from the model registry and used for batch inference.
 
 ### Feature Backfill
-The data is loaded from three different API's, 
+The data is loaded from three different API's.
+
+This notebook is divided into the following sections:
+1. Load the data and process features
+2. Connect to the Hopsworks feature store
+3. Create feature groups and upload them to the feature store
 
 ### Feature Pipeline
+This notebook consists of two sections:
+1. Parse new data of hourly electricity prices and weather measurements starting from 2024-01-01, and ending at 2024-04-08.
+2. The new data is inserted into the Feature Store.
 
 ### Training Pipeline
+This notebook is divided into the following sections:
+1. Feature selection.
+2. Feature transformations.
+3. Training datasets creation.
+4. Loading the training data.
+5. Train the model.
+6. Register the model to the Hopsworks model registry.
 
 ### Inference Pipeline
 
