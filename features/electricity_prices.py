@@ -47,9 +47,9 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     # Filter the df based on the historical parameter
     today = (date.today()).strftime("%Y-%m-%d")
     if historical:
-        filtered_df = filtered_df[df.date != today]
+        filtered_df = filtered_df[filtered_df.date != today]
     else:
-        filtered_df = filtered_df[df.date == today]
+        filtered_df = filtered_df[filtered_df.date == today]
 
     # Convert time to timestamp
     filtered_df["timestamp"] = filtered_df["time"].astype(int) // 10**6 * 1000
@@ -111,6 +111,8 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     # Drop unnecessary columns
     df.drop('Forecast5Hour', axis=1, inplace=True)
     df.drop('Forecast1Hour', axis=1, inplace=True)
+    df.drop('ForecastDayAhead', axis=1, inplace=True)
+    df.drop('ForecastCurrent', axis=1, inplace=True)
     df.drop('HourUTC', axis=1, inplace=True)
     df.drop('HourDK', axis=1, inplace=True)
     df.drop('TimestampDK', axis=1, inplace=True)
@@ -133,20 +135,16 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     filtered_df["timestamp"] = filtered_df["time"].astype(int) // 10**6 * 1000
 
     # Divide specified columns by 1000
-    filtered_df["ForecastDayAhead_KWH"] = filtered_df["ForecastDayAhead"] / 1000
     filtered_df["ForecastIntraday_KWH"] = filtered_df["ForecastIntraday"] / 1000
-    filtered_df["ForecastCurrent_KWH"] = filtered_df["ForecastCurrent"] / 1000
 
     # Drop unnecessary columns
-    df.drop('ForecastDayAhead', axis=1, inplace=True)
     df.drop('ForecastIntraday', axis=1, inplace=True)
-    df.drop('ForecastCurrent', axis=1, inplace=True)
 
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
 
     # Reorder the datafrate
-    reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'ForecastType', 'ForecastDayAhead_KWH', 'ForecastIntraday_KWH', 'ForecastCurrent_KWH']]
+    reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'ForecastType', 'ForecastIntraday_KWH']]
 
     # Unpivot DataFrame
     reordered_df = reordered_df.melt(id_vars=["timestamp", "time", "date", "PriceArea", "ForecastType"], var_name="attribute", value_name="value")
