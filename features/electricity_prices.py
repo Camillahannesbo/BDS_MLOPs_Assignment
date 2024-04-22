@@ -52,7 +52,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
         filtered_df = filtered_df[filtered_df.date == today]
 
     # Convert time to timestamp
-    filtered_df["timestamp"] = filtered_df["time"].astype(int) // 10**6 * 1000
+    filtered_df["timestamp"] = filtered_df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
@@ -132,7 +132,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
         filtered_df = filtered_df[df.date == today]
 
     # Convert time to timestamp
-    filtered_df["timestamp"] = filtered_df["time"].astype(int) // 10**6 * 1000
+    filtered_df["timestamp"] = filtered_df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Divide specified columns by 1000
     filtered_df["ForecastIntraday_KWH"] = filtered_df["ForecastIntraday"] / 1000

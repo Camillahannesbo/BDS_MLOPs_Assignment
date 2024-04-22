@@ -37,7 +37,7 @@ def historical_weater_measures(historical: bool = False, lat: float = 57.048, lo
     else:
         df = df[df.date == today]
 
-    df["timestamp"] = df["time"].astype(int) // 10**6 * 1000
+    df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     weater = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
@@ -67,7 +67,7 @@ def forecast_weater_measures(lat: float = 57.048, lon: float = 9.9187, forecast_
     df["date"] = df['time'].str[:10]
     df['time'] = pd.to_datetime(df['time'])
 
-    df["timestamp"] = df["time"].astype(int) // 10**6 * 1000
+    df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     weater = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
