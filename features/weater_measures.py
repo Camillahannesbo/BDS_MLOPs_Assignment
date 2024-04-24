@@ -41,6 +41,8 @@ def historical_weater_measures(historical: bool = False, lat: float = 57.048, lo
 
     weater = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
+    weater = weater.dropna()
+
     return weater
 
 def forecast_weater_measures(lat: float = 57.048, lon: float = 9.9187, forecast_length : int = 1) -> pd.DataFrame:
@@ -70,5 +72,7 @@ def forecast_weater_measures(lat: float = 57.048, lon: float = 9.9187, forecast_
     df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     weater = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+
+    weater = weater.dropna()
 
     return weater
