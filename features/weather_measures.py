@@ -3,9 +3,9 @@ from datetime import datetime, date, timedelta
 import pandas as pd
 
 
-def historical_weater_measures(historical: bool = False, lat: float = 57.048, lon: float = 9.9187, start: str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"), end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
+def historical_weather_measures(historical: bool = False, lat: float = 57.048, lon: float = 9.9187, start: str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"), end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
     """
-    Fetches weater measures from Open Meteo API.
+    Fetches weather measures from Open Meteo API.
 
     Parameters:
     - historical (bool): If True, fetches historical data from start date to end date. If False, fetches data for the current day. Default is False.
@@ -13,7 +13,7 @@ def historical_weater_measures(historical: bool = False, lat: float = 57.048, lo
     - start and end date is default to 'Yesterday' - 'Today'.
 
     Returns:
-    - pd.DataFrame: DataFrame with weater data for defined area.
+    - pd.DataFrame: DataFrame with weather data for defined area.
     """
 
     API_URL = 'https://archive-api.open-meteo.com/v1/archive'
@@ -39,21 +39,21 @@ def historical_weater_measures(historical: bool = False, lat: float = 57.048, lo
 
     df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
-    weater = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+    weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
-    weater = weater.dropna()
+    weather = weather.dropna()
 
-    return weater
+    return weather
 
-def forecast_weater_measures(lat: float = 57.048, lon: float = 9.9187, forecast_length : int = 1) -> pd.DataFrame:
+def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast_length : int = 1) -> pd.DataFrame:
     """
-    Fetches weater forecast from Open Meteo API.
+    Fetches weather forecast from Open Meteo API.
 
     Parameters:
     - latitude and longitude: Default to coordinates to Aalborg.
 
     Returns:
-    - pd.DataFrame: DataFrame with weater forecast for defined area.
+    - pd.DataFrame: DataFrame with weather forecast for defined area.
     """
 
     API_URL = 'https://api.open-meteo.com/v1/forecast'
@@ -71,8 +71,8 @@ def forecast_weater_measures(lat: float = 57.048, lon: float = 9.9187, forecast_
 
     df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
-    weater = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+    weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
-    weater = weater.dropna()
+    weather = weather.dropna()
 
-    return weater
+    return weather

@@ -1,5 +1,13 @@
 # <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**BDS MODULE 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
 
+## Expectation for the Assignment:
+What is expected for project:
+
+-	A form of prediction system. 
+-	Should be able to be retrained over time.
+-	Should be able to add on new data.
+-	Should be able to end up in a dashboard/interface.
+
 ## Group members
 | Name                     | Student ID |
 |--------------------------|------------|
@@ -10,9 +18,9 @@
 ---
 
 ## Objectives:
-This repository contains all notebooks and local datafiles for the final assignment in the module data engineering and machine learning operations in business (*"MLOPs" in short*)
+This repository contains all notebooks and local datafiles for the final assignment in the module data engineering and machine learning operations in business (*"MLOPs" in short*).
 
-The objective of this assignment is to build a prediction system that predicts the electricity prices in Denmark based on weather conditions, previous prices, and the Danish holidays.
+The objective of this assignment is to build a prediction system that predicts the electricity prices in Denmark (area DK1) based on weather conditions, previous prices, and the Danish holidays.
 
 ## Structure:
 There are four notebooks in the folder "*notebooks*":
@@ -22,29 +30,10 @@ There are four notebooks in the folder "*notebooks*":
 3. **Training Pipeline**: Building feature view,  training dataset split, training a model, and saving it in the Model Registry.
 4. **Inference Pipeline**: The trained model is retrieved from the model registry and used for batch inference.
 
-### Feature Backfill
-The data is loaded from three different API's.
+## Data Pipeline:
+Electricity Pipeline
 
-This notebook is divided into the following sections:
-1. Load the data and process features
-2. Connect to the Hopsworks feature store
-3. Create feature groups and upload them to the feature store
-
-### Feature Pipeline
-This notebook consists of two sections:
-1. Parse new data of hourly electricity prices and weather measurements starting from 2024-01-01, and ending at 2024-04-08.
-2. The new data is inserted into the Feature Store.
-
-### Training Pipeline
-This notebook is divided into the following sections:
-1. Feature selection.
-2. Feature transformations.
-3. Training datasets creation.
-4. Loading the training data.
-5. Train the model.
-6. Register the model to the Hopsworks model registry.
-
-### Inference Pipeline
+    mangler billede
 
 ## Data:
 The data used comes from three different sources:
@@ -54,3 +43,6 @@ The data used comes from three different sources:
 - Danish Calendar with the type if the date is a national holiday or not. This file is made manually by the group and is located in the "*data*" folder inside this repository.
 
 See corresponding functions in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features).
+
+## Frontend application
+A functional frontend application that visually demonstrates the project’s effectiveness in real-world scenarios (e.g. streamlit, gradio, Github pages)
