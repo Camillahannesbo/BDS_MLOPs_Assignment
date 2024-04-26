@@ -1,5 +1,5 @@
 # <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**BDS MODULE 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
-Report file elaborating on the process 
+Report file elaborating on the process
 
 # Topic title: Electricity Price Predicter for Denmark DK1 
 ## Business Problem
@@ -14,26 +14,47 @@ The application can be relevent both individual client and in larger business pe
     mangler billede 
 
 ## Feature Backfill
-The data is loaded from three different API's.
+The notebook is divided into the following sections:
+1. Loading data and process features
+2. Connecting to Hopsworks Feature Store
+3. Creating feature groups and uploading them to the feature store
 
-This notebook is divided into the following sections:
-1. Load the data and process features
-2. Connect to the Hopsworks feature store
-3. Create feature groups and upload them to the feature store
+**The data used comes from different sources:**
+
+- Electricity prices in Denmark on hourly basis per day from [Energinet](https://www.energidataservice.dk).
+- > Historical electricity prices for area DK1 starting from January 1, 2022, up until present day of yesterday. 
+
+- Different meteorological observations based on Aalborg Denmark from [Open Meteo](https://www.open-meteo.com). 
+- > Historical weather measurements based on the location of Aalborg, Denmark starting from January 1, 2022, up until present day of yesterday. 
+
+- Danish calendar that categorizes dates into types based on whether it is a weekday or not. This files is made manually by the group. 
+- > The calendar data stretches from 2022-01-01 until 2024-12-31.
+
+- Forecast Renewable Energy next day from [Energinet](https://www.energidataservice.dk). 
+- > Historical forecast of renewable energy data for area DK1 from January 1, 2022, up until present day of yesterday.  
+
+Creating feature groups for the four datasets and uploading them to the Feature Store that have been connected in Hopsworks.
 
 ## Feature Pipeline
-This notebook consists of two sections:
-1. Parse new data of hourly electricity prices and weather measurements starting from 2024-01-01, and ending at 2024-04-08.
-2. The new data is inserted into the Feature Store.
+The notebook is divided into the following sections:
+1. Parsing new data of today of hourly electricity prices and forecast weather measurements
+2. Inserting the new data into the Feature Store.
+
+Same API calls for the respective datasets as in Feature Backfill, just changing the historical setting to `false` so the fetched data is from real time of today.
+
+Uploading the new data to the feature groups created previously in Feature Backfill.
 
 ## Training Pipeline
 This notebook is divided into the following sections:
 1. Feature selection.
 2. Feature transformations.
-3. Training datasets creation.
+3. Training datasets creation - splitting into train, validation and test sets.
 4. Loading the training data.
-5. Train the model.
-6. Register the model to the Hopsworks model registry.
+5. Training the model.
+6. Register the model to Hopsworks Model Registry.
 
 ## Inference Pipeline
+This notebook is divided into the following sections:
+1. Loading batch data.
+2. Predicting using the model from Model Registry.
 
