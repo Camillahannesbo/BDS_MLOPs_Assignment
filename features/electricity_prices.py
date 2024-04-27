@@ -16,6 +16,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     - pd.DataFrame: DataFrame with electricity prices for different areas in Denmark (DK1, DK2).
     """
 
+    # Define the API URL for electricity prices data and make a request to the API
     API_URL = 'https://api.energidataservice.dk/dataset/Elspotprices'
     r = requests.get(API_URL , params={
                 'offset': 0,
@@ -51,13 +52,13 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     else:
         filtered_df = filtered_df[filtered_df.date == today]
 
-    # Convert time to timestamp
+    # Convert datetime to timestamp in milliseconds and add it as a new column
     filtered_df["timestamp"] = filtered_df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
 
-   # Reorder the datafrate
+    # Select relevant columns for weather data and reorder them
     reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'SpotPriceDKK_KWH']]
 
     # Unpivot DataFrame
@@ -94,6 +95,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     - pd.DataFrame: DataFrame with electricity prices for different areas in Denmark (DK1, DK2).
     """
 
+    # Define the API URL for forecasted renewable energy data and make a request to the API
     API_URL = 'https://api.energidataservice.dk/dataset/Forecasts_Hour'
     r = requests.get(API_URL , params={
                 'offset': 0,
@@ -101,6 +103,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
                 'end': end+'T23:59',
             })
 
+    # Extract JSON data from the response and make a DataFrame
     data = r.json()['records']
     df = pd.DataFrame(data)
 
@@ -131,7 +134,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     else:
         filtered_df = filtered_df[df.date == today]
 
-    # Convert time to timestamp
+    # Convert datetime to timestamp in milliseconds and add it as a new column
     filtered_df["timestamp"] = filtered_df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Divide specified columns by 1000
@@ -143,7 +146,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
 
-    # Reorder the datafrate
+    # Select relevant columns for weather data and reorder them
     reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'ForecastType', 'ForecastIntraday_KWH']]
 
     # Unpivot DataFrame

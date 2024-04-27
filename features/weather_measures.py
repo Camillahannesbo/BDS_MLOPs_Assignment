@@ -16,6 +16,7 @@ def historical_weather_measures(historical: bool = False, lat: float = 57.048, l
     - pd.DataFrame: DataFrame with weather data for defined area.
     """
 
+    # Define the API URL for historical weather data and make a request to the API
     API_URL = 'https://archive-api.open-meteo.com/v1/archive'
     r = requests.get(API_URL , params={
                 'latitude': lat,
@@ -25,24 +26,32 @@ def historical_weather_measures(historical: bool = False, lat: float = 57.048, l
                 'hourly': 'temperature_2m,relative_humidity_2m,precipitation,rain,snowfall,weather_code,cloud_cover,wind_speed_10m,wind_gusts_10m'
             })
 
+    # Extract JSON data from the response and make a DataFrame
     data = r.json()['hourly']
     df = pd.DataFrame(data)
+
+    # Extract date from the 'time' column and convert it to datetime format
     df["date"] = df['time'].str[:10]
     df['time'] = pd.to_datetime(df['time'])
 
-    today = (date.today()).strftime("%Y-%m-%d")
 
+    # Filter the DataFrame based on whether historical data is requested or not
+    today = (date.today()).strftime("%Y-%m-%d")
     if historical:
         df = df[df.date != today]
     else:
         df = df[df.date == today]
 
+    # Convert datetime to timestamp in milliseconds and add it as a new column
     df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
+    # Select relevant columns for weather data and reorder them
     weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
+    # Deleting rows with missing values
     weather = weather.dropna()
 
+    # Return the DataFrame with weather data
     return weather
 
 def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast_length : int = 1) -> pd.DataFrame:
@@ -64,15 +73,22 @@ def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast
                 "forecast_days": forecast_length
             })
 
+    # Extract JSON data from the response and make a DataFrame
     data = r.json()['hourly']
     df = pd.DataFrame(data)
+
+    # Extract date from the 'time' column and convert it to datetime format
     df["date"] = df['time'].str[:10]
     df['time'] = pd.to_datetime(df['time'])
 
+    # Convert datetime to timestamp in milliseconds and add it as a new column
     df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
 
-    weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+    # Select relevant columns for forecast weather data and reorder them
+    forecast_weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
-    weather = weather.dropna()
+    # Deleting rows with missing values
+    forecast_weather = forecast_weather.dropna()
 
-    return weather
+    # Return the DataFrame with weather data
+    return forecast_weather
