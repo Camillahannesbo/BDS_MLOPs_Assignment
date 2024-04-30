@@ -10,8 +10,9 @@ The objective is to build a prediction system that predicts the electricity pric
 The application can be relevent both individual client and in larger business perspective.  
 
 # Data Pipeline 
+Electricity Pipeline
 
-    mangler billede 
+![electricity_pipeline.png](images/electricity_pipeline.png)
 
 ## Feature Backfill
 The notebook is divided into the following sections:

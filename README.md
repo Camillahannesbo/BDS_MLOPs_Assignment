@@ -30,10 +30,13 @@ There are four notebooks in the folder "*notebooks*":
 3. **Training Pipeline**: Building feature view,  training dataset split, training a model, and saving it in the Model Registry.
 4. **Inference Pipeline**: The trained model is retrieved from the model registry and used for batch inference.
 
+The structure of the notebooks is largely inspired by [Hopsworks tutorials](https://github.com/logicalclocks/hopsworks-tutorials).
+Inspiration for code snippets has been taken from the following advanced tutorials [air_quality](https://github.com/logicalclocks/hopsworks-tutorials/tree/master/advanced_tutorials/air_quality), [electricity](https://github.com/logicalclocks/hopsworks-tutorials/tree/master/advanced_tutorials/electricity), and [timeseries](https://github.com/logicalclocks/hopsworks-tutorials/tree/master/advanced_tutorials/timeseries)
+
 ## Data Pipeline:
 Electricity Pipeline
 
-    mangler billede
+![electricity_pipeline.png](images/electricity_pipeline.png)
 
 ## Data:
 The data used comes from three different sources:
