@@ -1,7 +1,7 @@
 # <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**BDS MODULE 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
 
 ## Expectation for the Assignment:
-What is expected for project:
+What is expected for technical part of project:
 
 -	A form of prediction system. 
 -	Should be able to be retrained over time.
@@ -39,11 +39,13 @@ Electricity Pipeline
 ![electricity_pipeline.png](images/electricity_pipeline.png)
 
 ## Data:
-The data used comes from three different sources:
+The data used comes from the following sources:
 
-- Electricity prices in Denmark per day from [Energinet](https://www.energidataservice.dk).
-- Different meteorological observations from [Open meteo](https://www.open-meteo.com).
-- Danish Calendar with the type if the date is a national holiday or not. This file is made manually by the group and is located in the "*data*" folder inside this repository.
+- Hourly electricity prices in Denmark per day from [Energinet](https://www.energidataservice.dk).
+- Different meteorological observations based on Aalborg Denmark from [Open meteo](https://www.open-meteo.com).
+- Danish calendar that categorizes dates into types based on whether it is a weekday or not. This file is made manually by the group and is located in the "*data*" folder inside this repository.
+- Forecast Renewable Energy next day from [Energinet](https://www.energidataservice.dk).
+- Weather Forecast based on Aalborg Denmark from [Open Meteo](https://www.open-meteo.com).
 
 See corresponding functions in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features).
 
