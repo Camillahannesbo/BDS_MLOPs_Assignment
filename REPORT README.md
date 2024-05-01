@@ -16,32 +16,32 @@ Electricity Pipeline
 
 ## Feature Backfill
 The notebook is divided into the following sections:
-1. Loading data and process features
+1. Loading historical data and process features
 2. Connecting to Hopsworks Feature Store
 3. Creating feature groups and uploading them to the feature store
 
 **The data used comes from different sources:**
 
 - Electricity prices in Denmark on hourly basis per day from [Energinet](https://www.energidataservice.dk).
-- > Historical electricity prices for area DK1 starting from January 1, 2022, up until present day of yesterday. 
+   - Historical electricity prices for area DK1 starting from January 1, 2022, up until present day of yesterday. 
 
 - Different meteorological observations based on Aalborg Denmark from [Open Meteo](https://www.open-meteo.com). 
-- > Historical weather measurements based on the location of Aalborg, Denmark starting from January 1, 2022, up until present day of yesterday. 
+   - Historical weather measurements based on the location of Aalborg, Denmark starting from January 1, 2022, up until present day of yesterday. 
 
 - Danish calendar that categorizes dates into types based on whether it is a weekday or not. This files is made manually by the group. 
-- > The calendar data stretches from 2022-01-01 until 2024-12-31.
+   - The calendar data stretches from 2022-01-01 until 2024-12-31.
 
 - Forecast Renewable Energy next day from [Energinet](https://www.energidataservice.dk). 
-- > Historical forecast of renewable energy data for area DK1 from January 1, 2022, up until present day of yesterday.  
+   - Historical forecast of renewable energy data for area DK1 from January 1, 2022, up until present day of yesterday.  
 
 Creating feature groups for the four datasets and uploading them to the Feature Store that have been connected in Hopsworks.
 
 ## Feature Pipeline
 The notebook is divided into the following sections:
-1. Parsing new data of today of hourly electricity prices and forecast weather measurements
+1. Parsing new data of today of hourly electricity prices, forecast of renewable energy data and forecast weather measurements.
 2. Inserting the new data into the Feature Store.
 
-Same API calls for the respective datasets as in Feature Backfill, just changing the historical setting to `false` so the fetched data is from real time of today.
+Same API calls for the respective datasets as in Feature Backfill, just changing the historical setting to `false` so the fetched data is from real time of today. In order to provide real time weather measures, a weather forecast measure for the next 5 days is being fetched.
 
 Uploading the new data to the feature groups created previously in Feature Backfill.
 
