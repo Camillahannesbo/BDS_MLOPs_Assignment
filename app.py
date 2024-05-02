@@ -28,7 +28,7 @@ def print_fancy_header(text, font_size=22, color="#ff5f27"):
 def get_feature_view():
     st.write("Getting the Feature View...")
     feature_view = fs.get_feature_view(
-        name = 'electricity_feature_view',
+        name = 'electricity_training_feature_view',
         version = 1
     )
     st.write("✅ Success!")
@@ -121,7 +121,7 @@ weather_forecast_df = weather_measures.forecast_weather_measures(
 )
 
 # Fetching danish calendar
-calendar_df = calendar.calendar()
+calendar_df = calendar.get_calendar()
 
 # Merging the weather forecast and calendar dataframes
 new_data = pd.merge(weather_forecast_df, calendar_df, how='inner', left_on='date', right_on='date')
@@ -146,6 +146,20 @@ predictions_df = predictions_df.sort_values(by='time')
 st.write("predictions_df:")
 st.write(predictions_df.sample(5))       
 
+
+#########################
+st.write(3 * '-')
+st.write("\n")
+
+print_fancy_header('\n📈 Predictions Table for today and 4 days ahead')
+
+# Reshape the predictions data to a Table format, where each row represents a hour and each column a day
+table_df = predictions_df['prediction'].values.reshape(-1, 24)
+table_df = pd.DataFrame(table_df, columns=[f'{i}:00' for i in range(24)], index = [f'Day {i}' for i in range(table_df.shape[0])])
+
+st.write(table_df.T.style.set_properties(**{'width': '100%', 'max-width': 'none'}))
+
+#########################
 st.write(3 * '-')
 st.write("\n")
 
@@ -167,3 +181,4 @@ chart = alt.Chart(filtered_predictions_df).mark_line(point=True).encode(
 
 # Display the chart
 st.altair_chart(chart, use_container_width=True)
+
