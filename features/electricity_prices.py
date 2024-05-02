@@ -142,8 +142,8 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     # Convert datetime to timestamp in milliseconds and add it as a new column
     filtered_df["timestamp"] = filtered_df["datetime"].apply(lambda x: int(x.timestamp() * 1000))
 
-    # Divide specified columns by 1000
-    filtered_df["ForecastIntraday_KWH"] = filtered_df["ForecastIntraday"] / 1000
+    # Multiply specified columns by 1000
+    filtered_df["ForecastIntraday_KWH"] = filtered_df["ForecastIntraday"] * 1000
 
     # Drop unnecessary columns
     df.drop('ForecastIntraday', axis=1, inplace=True)
