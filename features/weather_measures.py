@@ -32,8 +32,9 @@ def historical_weather_measures(historical: bool = False, lat: float = 57.048, l
 
     # Extract date from the 'time' column and convert it to datetime format
     df["date"] = df['time'].str[:10]
-    df['time'] = pd.to_datetime(df['time'])
-
+    df['datetime'] = pd.to_datetime(df['time'])
+    # df['time'] = pd.to_datetime(df['datetime']).dt.time
+    df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
     # Filter the DataFrame based on whether historical data is requested or not
     today = (date.today()).strftime("%Y-%m-%d")
@@ -43,10 +44,10 @@ def historical_weather_measures(historical: bool = False, lat: float = 57.048, l
         df = df[df.date == today]
 
     # Convert datetime to timestamp in milliseconds and add it as a new column
-    df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
+    df["timestamp"] = df["datetime"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Select relevant columns for weather data and reorder them
-    weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+    weather = df[['timestamp', 'datetime', 'date', 'hour', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
 
     # Deleting rows with missing values
     weather = weather.dropna()
@@ -79,13 +80,20 @@ def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast
 
     # Extract date from the 'time' column and convert it to datetime format
     df["date"] = df['time'].str[:10]
-    df['time'] = pd.to_datetime(df['time'])
+    df['datetime'] = pd.to_datetime(df['time'])
+    # df['time'] = pd.to_datetime(df['datetime']).dt.time
+    df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
     # Convert datetime to timestamp in milliseconds and add it as a new column
-    df["timestamp"] = df["time"].apply(lambda x: int(x.timestamp() * 1000))
+    df["timestamp"] = df["datetime"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Select relevant columns for forecast weather data and reorder them
-    forecast_weather = df[['timestamp', 'date', 'time', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+    forecast_weather = df[['timestamp', 'datetime', 'date', 'hour', 'temperature_2m', 'relative_humidity_2m', 'precipitation', 'rain', 'snowfall', 'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_gusts_10m']]
+
+    # Convert columns to float
+    forecast_weather['relative_humidity_2m'] = forecast_weather['relative_humidity_2m'].astype(float)
+    forecast_weather['weather_code'] = forecast_weather['weather_code'].astype(float)
+    forecast_weather['cloud_cover'] = forecast_weather['cloud_cover'].astype(float)
 
     # Deleting rows with missing values
     forecast_weather = forecast_weather.dropna()

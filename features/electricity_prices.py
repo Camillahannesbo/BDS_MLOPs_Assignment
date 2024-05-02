@@ -31,7 +31,10 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
 
     # Format date and time
     df["date"] = df["HourDK"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
-    df['time'] = pd.to_datetime(df['HourDK'])
+    df['datetime'] = pd.to_datetime(df['HourDK'])
+    # df['time'] = pd.to_datetime(df['datetime']).dt.time
+    df['hour'] = pd.to_datetime(df['datetime']).dt.hour
+
 
     # Dicide the price to KWH
     df['SpotPriceDKK_KWH'] = df['SpotPriceDKK'] / 1000
@@ -53,16 +56,16 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
         filtered_df = filtered_df[filtered_df.date == today]
 
     # Convert datetime to timestamp in milliseconds and add it as a new column
-    filtered_df["timestamp"] = filtered_df["time"].apply(lambda x: int(x.timestamp() * 1000))
+    filtered_df["timestamp"] = filtered_df["datetime"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
 
     # Select relevant columns for weather data and reorder them
-    reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'SpotPriceDKK_KWH']]
+    reordered_df = filtered_df[['timestamp', 'datetime', 'date', 'hour', 'PriceArea', 'SpotPriceDKK_KWH']]
 
     # Unpivot DataFrame
-    reordered_df = reordered_df.melt(id_vars=["timestamp", "time", "date", "PriceArea"], var_name="attribute", value_name="value")
+    reordered_df = reordered_df.melt(id_vars=['timestamp', 'datetime', 'date', 'hour', "PriceArea"], var_name="attribute", value_name="value")
 
     # Combine columns into a single "heading" column
     reordered_df["heading"] = reordered_df["PriceArea"] + "_" + reordered_df["attribute"]
@@ -72,7 +75,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     reordered_df.drop(columns=["attribute"], inplace=True)
 
     # Pivot DataFrame
-    electricity_prices = reordered_df.pivot_table(index=["timestamp", "time", "date"], columns="heading", values="value").reset_index()
+    electricity_prices = reordered_df.pivot_table(index=['timestamp', 'datetime', 'date', 'hour'], columns="heading", values="value").reset_index()
 
     # Converting column names to lowercase for consistency
     electricity_prices.columns = list(map(str.lower, electricity_prices.columns))
@@ -109,7 +112,9 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
 
     # Format date and time
     df["date"] = df["HourDK"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
-    df['time'] = pd.to_datetime(df['HourDK'])
+    df['datetime'] = pd.to_datetime(df['HourDK'])
+    # df['time'] = pd.to_datetime(df['datetime']).dt.time
+    df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
     # Drop unnecessary columns
     df.drop('Forecast5Hour', axis=1, inplace=True)
@@ -135,7 +140,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
         filtered_df = filtered_df[df.date == today]
 
     # Convert datetime to timestamp in milliseconds and add it as a new column
-    filtered_df["timestamp"] = filtered_df["time"].apply(lambda x: int(x.timestamp() * 1000))
+    filtered_df["timestamp"] = filtered_df["datetime"].apply(lambda x: int(x.timestamp() * 1000))
 
     # Divide specified columns by 1000
     filtered_df["ForecastIntraday_KWH"] = filtered_df["ForecastIntraday"] / 1000
@@ -147,10 +152,10 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     filtered_df.reset_index(drop=True, inplace=True)
 
     # Select relevant columns for weather data and reorder them
-    reordered_df = filtered_df[['timestamp', 'date', 'time', 'PriceArea', 'ForecastType', 'ForecastIntraday_KWH']]
+    reordered_df = filtered_df[['timestamp', 'datetime', 'date', 'hour', 'PriceArea', 'ForecastType', 'ForecastIntraday_KWH']]
 
     # Unpivot DataFrame
-    reordered_df = reordered_df.melt(id_vars=["timestamp", "time", "date", "PriceArea", "ForecastType"], var_name="attribute", value_name="value")
+    reordered_df = reordered_df.melt(id_vars=["timestamp", 'datetime', "date", "hour", "PriceArea", "ForecastType"], var_name="attribute", value_name="value")
 
     # Combine columns into a single "heading" column
     reordered_df["heading"] = reordered_df["PriceArea"] + "_" + reordered_df["ForecastType"] + "_" + reordered_df["attribute"]
@@ -161,7 +166,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     reordered_df.drop(columns=["attribute"], inplace=True)
 
     # Pivot DataFrame
-    forecast_renewable_energy = reordered_df.pivot_table(index=["timestamp", "time", "date"], columns="heading", values="value").reset_index()
+    forecast_renewable_energy = reordered_df.pivot_table(index=["timestamp", "datetime", "date", "hour"], columns="heading", values="value").reset_index()
 
     # Converting column names to lowercase for consistency
     forecast_renewable_energy.columns = list(map(str.lower, forecast_renewable_energy.columns))
