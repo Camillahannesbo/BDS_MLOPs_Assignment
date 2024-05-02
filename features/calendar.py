@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 
-def get_calendar() -> pd.DataFrame:
+def calendar() -> pd.DataFrame:
     """
     Fetches calendar for Denmark.
 
