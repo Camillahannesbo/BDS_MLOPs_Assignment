@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 
-def get_calendar() -> pd.DataFrame:
+def dk_calendar() -> pd.DataFrame:
     """
     Fetches calendar for Denmark.
 
@@ -25,7 +25,7 @@ def get_calendar() -> pd.DataFrame:
     df['day'] = df['date_'].dt.day
     df['month'] = df['date_'].dt.month
     df['year'] = df['date_'].dt.year
-    df['holiday'] = np.where(df['type'] == 'Not a Workday', 1, 0)
+    df['workday'] = np.where(df['type'] == 'Not a Workday', 0, 1)
 
     # Drop the columns 'type' and 'date_' to finalize the calender dataframe
     calendar = df.drop(['type','date_'], axis=1)

@@ -1,12 +1,16 @@
 name: Sync to Hugging Face hub
 on:
+
+  # To run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  # Schedule the workflow to run at 23:59 everyday
   schedule:
-    - cron: '0 0 * * *' # At 00:00 everyday
+    - cron: '59 23 * * *' 
+  
+  # Push events to the main branch
   push:
     branches: [main]
-
-  # to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 jobs:
   sync-to-hub:
