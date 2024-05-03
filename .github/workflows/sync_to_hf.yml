@@ -1,5 +1,7 @@
 name: Sync to Hugging Face hub
 on:
+  schedule:
+    - cron: '0 0 * * *' # At 00:00 everyday
   push:
     branches: [main]
 
