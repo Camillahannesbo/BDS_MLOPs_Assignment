@@ -9,6 +9,7 @@ import altair as alt
 import hopsworks 
 import streamlit as st
 import csv
+import os
 
 import plotly.express as px
 import folium
@@ -21,7 +22,6 @@ from features import electricity_prices, weather_measures, calendar
 def print_fancy_header(text, font_size=22, color="#ff5f27"):
     res = f'<span style="color:{color}; font-size: {font_size}px;">{text}</span>'
     st.markdown(res, unsafe_allow_html=True)  
-
 
 # I want to cache this so streamlit would run much faster after restart (it restarts a lot)
 @st.cache_data()
@@ -88,7 +88,7 @@ print_fancy_header('\n📡 Connecting to Hopsworks Feature Store...')
 st.write("Logging... ")
 # (Attention! If the app has stopped at this step,
 # please enter your Hopsworks API Key in the commmand prompt.)
-project = hopsworks.login()
+project = hopsworks.login(project = "camillah", api_key_value=os.environ['HOPSWORKS_API_KEY'])
 fs = project.get_feature_store()
 st.write("✅ Logged in successfully!")
 
