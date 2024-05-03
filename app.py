@@ -1,19 +1,17 @@
-import json
-import time
-import pickle
+# Importing the necessary libraries
+import streamlit as st
+from streamlit_folium import st_folium
+import pandas as pd
+import hopsworks 
+
 import joblib
 import datetime
-import pandas as pd
+
 import altair as alt
-
-import hopsworks 
-import streamlit as st
-import csv
-import os
-
 import plotly.express as px
+
+import os
 import folium
-from streamlit_folium import st_folium
 
 # Now we import the functions from the features folder
 # This is the functions we have created to generate features for electricity prices and weather measures
@@ -51,9 +49,6 @@ def download_model(name="electricity_price_prediction_model",
     saved_model_dir = retrieved_model.download()
     return saved_model_dir
 
-# with open('data/calendar_incl_holiday.csv') as csv_file:
-#     target_days = csv.reader(csv_file)
-
 # Function to load the dataset
 @st.cache_data  # Cache the function to enhance performance
 def load_data():
@@ -63,7 +58,7 @@ def load_data():
     )
 
     # Fetching danish calendar
-    calendar_df = calendar.get_calendar()
+    calendar_df = calendar.dk_calendar()
 
     # Merging the weather forecast and calendar dataframes
     new_data = pd.merge(weather_forecast_df, calendar_df, how='inner', left_on='date', right_on='date')
@@ -147,10 +142,6 @@ with st.sidebar:
     st.write("✅ Model successfully loaded!")
 
     progress_bar.progress(80)
-
-# I am going to load data for of last 60 days (for feature engineering)
-today = datetime.date.today()
-date_threshold = today - datetime.timedelta(days=60)
 
 st.write(3 * "-")
 print_fancy_header('\n☁️ Retriving batch data from Feature Store...')
