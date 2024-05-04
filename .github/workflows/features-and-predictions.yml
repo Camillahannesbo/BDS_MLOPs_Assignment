@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
   # Schedule the workflow to run at 23:50 everyday
-  #schedule:
-  # - cron: '55 01 * * *'
+  schedule:
+   - cron: '55 01 * * *'
 
 jobs:
   test_schedule:
