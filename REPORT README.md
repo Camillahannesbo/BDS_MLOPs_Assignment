@@ -59,14 +59,22 @@ This notebook is divided into the following sections:
 4. Training the model.
 5. Register the model to the Hopsworks Model Registry.
 
-The selected features for training data are based on selecting all features of the electricity and calendar feature group.
+We first select the features that we want to include for model training and based on the specified `primary_key`, `date` and `timestamp`, in part 01_feature_backfill we can now join features together for the `electricity_fg`, `weather_fg`, and `Danish_holiday_fg`. For `electricity_fg` and `Danish_holiday_fg` all columns are selected. For `weather_fg`, "timestamp", "datetime", and "hour" is not selected since they do not directly contribute to predicting electricity prices now that we have joined the feature groups based on the `primary_key`. Сombining **Feature Groups** we can then create a **Feature View** which stores a metadata of our data. Having the **Feature View** we can create a **Training Dataset**.
 
-We first select the features that we want to include for model training and based on the specified `primary_key`as `date` and `timestamp` in part 01_feature_backfill we can now join them together for the `electricity_fg`, `weather_fg`, and `Danish_holiday_fg`. For `electricity_fg` and `Danish_holiday_fg` all columns are selected. For `weather_fg`, "timestamp", "datetime", and "hour" is not selected since they do not directly contribute to predicting electricity prices now that we have joined based on the `primary_key`.
+Creating the traning / test split data is first retrived from the Hopsworks Feature Store where we stored the feature view. The training data is then split into 80% assigned to training and the remaining 20% is left out for testing and evaluating the performance of the model.
 
-Сombining **Feature Groups** we can create a **Feature View** which stores a metadata of our data. Having the **Feature View** we can create a **Training Dataset**.
+From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is fittet to the train data and further evluated using validation metric functions from the sklearn library. The results are illustrated below and indicates that the model has a fairly good performance when it comes to predicting new electricitry prices. 
 
-From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is trained on the 
+| Validation metrics       |  |
+|----------------------|----------|
+| ⛳️ MSE               | 0.0022   |
+| ⛳️ RMSE              | 0.0471   |
+| ⛳️ R^2               | 0.9708   |
+| ⛳️ MAE               | 0.04100  |
 
+We further look into the feature importances using the plot_importance function from XGBoost, here ....
+
+A schema of the model's input and output is specified from training examples using the features (X_train) and target variable (y_train). An entry of the specified details is then created and the model is uploaded to the Hopsworks Model Registry.
 
 ## Inference Pipeline
 Implemented in [notebooks/4_batch_inference.ipynb](https://github.com/Camillahannesbo/MLOPs-Assignment-/blob/main/notebooks/4_batch_inference.ipynb).
@@ -74,3 +82,13 @@ Implemented in [notebooks/4_batch_inference.ipynb](https://github.com/Camillahan
 This notebook is divided into the following sections:
 1. Load new batch data.
 2. Predict using the model from the Model Registry.
+
+Our objective is to predict the electricity prices for the upcoming days, therefore we load a weather forecast as batch data to generate predictions. This dataframe is merged with the calendar dataframe. 
+This batch obtains daily weather measures forecast for the upcoming 5 days after the run (e.g, a run on May 7th will fetch values 5 days ahead including May 12th).
+
+The saved XGBmodel is retrived and used on the new merged data to predict the electricity prices the upcoming 5 days. 
+
+Along with a prediction matrix on hourly intervals, the batch pipeline also include a timeseries plot visualizing the trend of the spot price (in DKK) for DK1 over the prediction time. An interactive of this in form of a line chart with points is also created to enabling users to explore the data and gain insights interactively.
+
+The feature pipeline and batch inference runs on daily basis as a scheduled function using Github Actions. 
+A script is setup to run the feature and batch inference pipeline and a Github Action workflow is schedueled to run the script at 23:50 everyday. Another workflow is schlued to run at 23:59 everyday to sync the features and predictions made daily up to Huggingface Spaces. 
