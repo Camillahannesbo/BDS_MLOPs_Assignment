@@ -63,7 +63,7 @@ We first select the features that we want to include for model training and base
 
 Creating the training/test split data is first retrieved from the Hopsworks Feature Store where we stored the feature view. The training data is then split into 80% assigned to training and the remaining 20% is left out for testing and evaluating the performance of the model.
 
-From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is fitted to the train data and further evaluated using validation metric functions from the sklearn library. The results are illustrated below and indicates that the model has a fairly good performance when it comes to predicting new electricity prices. 
+From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is fitted to the train data and further evaluated using validation metric functions from the sklearn library. The results are illustrated below and indicate that the model has a fairly good performance when it comes to predicting new electricity prices. 
 
 | Validation metrics       |  |
 |----------------------|----------|
