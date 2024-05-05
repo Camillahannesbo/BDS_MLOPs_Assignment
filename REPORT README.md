@@ -61,7 +61,9 @@ This notebook is divided into the following sections:
 
 The selected features for training data are based on selecting all features of the electricity and calendar feature group.
 
-We first select the features that we want to include for model training and based on the specified `primary_key`as `date` and `timestamp` in part 01_feature_backfill we can now join them together for the `electricity_fg`, `weather_fg`, and `Danish_holiday_fg`. "timestamp", "datetime", and "hour" is not selected from the `weather_fg`since they do not directly contribute to predicting electricity prices now that we have joined based on the `primary_key`.
+We first select the features that we want to include for model training and based on the specified `primary_key`as `date` and `timestamp` in part 01_feature_backfill we can now join them together for the `electricity_fg`, `weather_fg`, and `Danish_holiday_fg`. For `electricity_fg` and `Danish_holiday_fg` all columns are selected. For `weather_fg`, "timestamp", "datetime", and "hour" is not selected since they do not directly contribute to predicting electricity prices now that we have joined based on the `primary_key`.
+
+Сombining **Feature Groups** we can create a **Feature View** which stores a metadata of our data. Having the **Feature View** we can create a **Training Dataset**.
 
 From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is trained on the 
 
