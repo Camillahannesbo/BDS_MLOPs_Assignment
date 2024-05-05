@@ -27,18 +27,16 @@ The notebook is divided into the following sections:
 **The data used comes from different sources:**
 
 - Hourly electricity spot price in kwh per day from [Energinet](https://www.energidataservice.dk).
-   - Historical electricity prices for area DK1 starting from January 1, 2022, up until present day. Today is not included since it is not historical data. 
+   - Historical electricity prices for area DK1 starting from January 1, 2022, up until the present day. Today is not included since it is not historical data. 
 
 - Different meteorological observations based on Aalborg Denmark from [Open Meteo](https://www.open-meteo.com). 
-   - Historical weather measurements based on the location of Aalborg, Denmark starting from January 1, 2022, up until present day. 
+   - Historical weather measurements based on the location of Aalborg, Denmark starting from January 1, 2022, up until the present day. 
 
-- Danish calendar that categorizes dates into types based on whether it is a workday or not. This files is made manually by the group. 
+- Danish calendar that categorizes dates into types based on whether it is a workday or not. This file is made manually by the group. 
    - The calendar data stretches from 2022-01-01 until 2024-12-31. 
    - Workday is represented by 1 and not a workday is represented by 0.
 
-Creating feature groups for the three datasets defining a `primary_key` as `date` and `timestamp`, so we are able to join them when we create a dataset for training in part 03 the training_pipeline. The feature groups are uploaded to the Feature Store that have been connected in Hopsworks.
-
-We specify a `primary_key` as `date` and `timestamp`, so we are able to join them when we create a dataset for training later in part 03 the training_pipeline.
+Creating feature groups for the three datasets defining a `primary_key` as `date` and `timestamp`, so we can join them when we create a dataset for training in part 03 training_pipeline. The feature groups are uploaded to the Feature Store that has been connected in Hopsworks.
 
 ## Feature Pipeline
 Implemented in [notebooks/2_feature_pipeline.ipynb](https://github.com/Camillahannesbo/MLOPs-Assignment-/blob/main/notebooks/2_feature_pipeline.ipynb). 
@@ -47,7 +45,7 @@ The notebook is divided into the following sections:
 1. Parsing new data of today of hourly electricity prices and forecast weather measurements.
 2. Inserting the new data into the Feature Store.
 
-Same API calls for the electricity prices as in Feature Backfill, just changing the historical setting to `false` so the fetched data is from real time. In order to provide real time weather measures, a weather forecast measure for the next 5 days is being fetched.
+The same API call for the electricity prices as in Feature Backfill, just changing the historical setting to `false` so the fetched data is from real time. To provide real-time weather measures, a weather forecast measure for the next 5 days is being fetched.
 
 Uploading the new data to the feature groups created previously in Feature Backfill.
 
@@ -59,13 +57,13 @@ This notebook is divided into the following sections:
 2. Creating a Feature View.
 3. Training datasets creation - splitting into train and test sets.
 4. Training the model.
-5. Register the model to Hopsworks Model Registry.
+5. Register the model to the Hopsworks Model Registry.
 
-The selected features for training data is based on select all feature of the electricitry and calendar feature grup.
+The selected features for training data are based on selecting all features of the electricity and calendar feature group.
 
-We first select the features that we want to include for model training and based on the specified `primary_key`as `date` and `timestamp` in part 01_feature_backfill we can now join them together for the `electricity_fg`, `weather_fg` and `danish_holiday_fg`. "timestamp", "datetime", and "hour" is not selected from the `weather_fg`since they not directly contribute to predicting electricity prices now that we have joined based on the `primary_key`.
+We first select the features that we want to include for model training and based on the specified `primary_key`as `date` and `timestamp` in part 01_feature_backfill we can now join them together for the `electricity_fg`, `weather_fg`, and `Danish_holiday_fg`. "timestamp", "datetime", and "hour" is not selected from the `weather_fg`since they do not directly contribute to predicting electricity prices now that we have joined based on the `primary_key`.
 
-From the xgboost Python Package we initialize the XGBoost Regressor as the model used for training and predition. The model is trained on the 
+From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is trained on the 
 
 
 ## Inference Pipeline
@@ -73,4 +71,4 @@ Implemented in [notebooks/4_batch_inference.ipynb](https://github.com/Camillahan
 
 This notebook is divided into the following sections:
 1. Load new batch data.
-2. Predict using the model from Model Registry.
+2. Predict using the model from the Model Registry.
