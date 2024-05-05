@@ -36,7 +36,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
 
-    # Dicide the price to KWH
+    # Divide the price to KWH
     df['SpotPriceDKK_KWH'] = df['SpotPriceDKK'] / 1000
 
     # Drop unnecessary columns
@@ -61,7 +61,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
 
-    # Select relevant columns for weather data and reorder them
+    # Select relevant columns for electricity prices data and reorder them
     reordered_df = filtered_df[['timestamp', 'datetime', 'date', 'hour', 'PriceArea', 'SpotPriceDKK_KWH']]
 
     # Unpivot DataFrame
@@ -83,6 +83,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
     # Replace spaces in column names with underscores
     electricity_prices.columns = electricity_prices.columns.str.replace(' ', '_')
 
+    # Return the DataFrame with electricity prices data
     return electricity_prices
 
 def forecast_renewable_energy(historical: bool = False, area: str = None, start: str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"), end: str = (date.today()).strftime("%Y-%m-%d")) -> pd.DataFrame:
@@ -151,7 +152,7 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     # Reset the index to avoid duplicate entries
     filtered_df.reset_index(drop=True, inplace=True)
 
-    # Select relevant columns for weather data and reorder them
+    # Select relevant columns for forecasted renewable energy data and reorder them
     reordered_df = filtered_df[['timestamp', 'datetime', 'date', 'hour', 'PriceArea', 'ForecastType', 'ForecastIntraday_KWH']]
 
     # Unpivot DataFrame
@@ -174,4 +175,5 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     # Replace spaces in column names with underscores
     forecast_renewable_energy.columns = forecast_renewable_energy.columns.str.replace(' ', '_')
 
+    # Return the DataFrame with forecast renewable energy data
     return forecast_renewable_energy

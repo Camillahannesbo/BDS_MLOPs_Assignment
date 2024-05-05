@@ -19,7 +19,7 @@ def dk_calendar() -> pd.DataFrame:
     # Formatting the date column to 'YYYY-MM-DD' dateformat
     df["date"] = df["date"].map(lambda x: datetime.strptime(x, '%d/%m/%Y').strftime("%Y-%m-%d"))
 
-    # Add features to the calender dataframe
+    # Add features to the calendar dataframe
     df['date_'] = pd.to_datetime(df['date'])
     df['dayofweek'] = df['date_'].dt.dayofweek
     df['day'] = df['date_'].dt.day
@@ -27,8 +27,8 @@ def dk_calendar() -> pd.DataFrame:
     df['year'] = df['date_'].dt.year
     df['workday'] = np.where(df['type'] == 'Not a Workday', 0, 1)
 
-    # Drop the columns 'type' and 'date_' to finalize the calender dataframe
+    # Drop the columns 'type' and 'date_' to finalize the calendar dataframe
     calendar = df.drop(['type','date_'], axis=1)
 
-    # Return the DataFrame with weather data
+    # Return the DataFrame with calendar data
     return calendar

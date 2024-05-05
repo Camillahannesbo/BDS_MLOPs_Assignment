@@ -98,5 +98,5 @@ def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast
     # Deleting rows with missing values
     forecast_weather = forecast_weather.dropna()
 
-    # Return the DataFrame with weather data
+    # Return the DataFrame with forecast weather data
     return forecast_weather
