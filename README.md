@@ -12,7 +12,7 @@ pinned: false
 # <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**BDS MODULE 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
 
 ## Expectation for the Assignment:
-What is expected for technical part of project:
+What is expected for the technical part of the project:
 
 -	A form of prediction system. 
 -	Should be able to be retrained over time.
