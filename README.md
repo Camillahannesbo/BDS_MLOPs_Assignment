@@ -20,7 +20,7 @@ What is expected for the technical part of the project:
 -	Should be able to end up in a dashboard/interface.
 
 ## Objectives:
-This repository contains all notebooks and local datafiles for the final assignment in the module Data Engineering and Machine Learning Operations in Business (*"MLOPs" in short*).
+This repository contains all notebooks and local data files for the final assignment in the module Data Engineering and Machine Learning Operations in Business (*"MLOPs" in short*).
 
 The objective of this assignment is to build a prediction system that predicts the electricity prices in Denmark (area DK1) based on weather conditions, previous prices, and the Danish calendar.
 
@@ -50,7 +50,7 @@ The data used comes from the following sources:
 - Weather Forecast based on Aalborg Denmark also from [Open Meteo](https://www.open-meteo.com).
 - Danish calendar that categorizes dates into types based on whether it is a workday or not. This file is made manually by the group and is located in the "*data*" folder inside this repository.
 
-See corresponding functions in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features). The functions includes the initial API call and the following data preprocessing of the data.
+See corresponding functions in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features). The functions include the initial API call and the following data preprocessing of the data.
 
 ## Model Performance:
 We initialize the XGBoost Regressor as the model used for training and prediction. The model is fitted to the train data and further evaluated using validation metric functions from the sklearn library. 
