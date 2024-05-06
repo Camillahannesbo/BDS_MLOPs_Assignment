@@ -13,7 +13,7 @@
 In recent times, energy prices have experienced a notable surge, prompting consumers and businesses alike to scrutinize their energy consumption patterns more closely than ever before. This surge in energy prices has not only heightened awareness regarding energy usage but has also sparked a renewed interest in identifying the optimal times for energy consumption. As consumers seek to navigate this landscape of rising energy costs, understanding when the best times are for utilizing energy becomes paramount. By pinpointing these optimal periods, individuals and organizations can strategically adjust their energy usage patterns to minimize costs while maximizing efficiency. ([Reference](https://www.sciencedirect.com/science/article/pii/S0306261919305380?casa_token=_hhzNcNsAigAAAAA:oG1cTP_L08OHxMEK3bByPppiE4EIYplXzdl5BEBxSZHgbxvN4KMbmRGW5RVIDmp2z-J9LjBIT3o))
 
 ### Objectives
-The objective is to build a prediction system that predicts the daily electricity prices per hour in Denmark (area DK1) based on weather conditions, previous prices, and the Danish calendar. Each day the dataset will automaticly update by using live API calls to the relevant datasources. This will end up in a frontend application there ultimately can help the user decide when is the best time to charge the electric vehicle or have production running. The application can be relevant for both individual clients and in a larger business perspective.
+The objective is to build a prediction system that predicts the daily electricity prices per hour in Denmark (area DK1) based on weather conditions, previous prices, and the Danish calendar. Each day the dataset will automatically update by using live API calls to the relevant data sources. This will end up in a frontend application there ultimately can help the user decide when is the best time to charge the electric vehicle or have production running. The application can be relevant for both individual clients and in a larger business perspective.
 
 # Data Pipeline 
 The prediction system is built using several features, training, and inference pipelines. [Hopsworks](https://www.hopsworks.ai) is used as the platform to store features in the **Hopworks Feature Store** and save the trained model in **Hopworks Model Registry**. The overall architecture of the Electricity Pipeline is illustrated below. Inspiration is taken from [MLOPs Lecture 2](https://github.com/saoter/SDS24_MLOps_L1/blob/main//MLOps_Lecture_2_slides.pdf).
@@ -36,7 +36,7 @@ Meteorological observations for Aalborg, Denmark, sourced from [Open Meteo](http
 
 Additionally, a Danish calendar classifies dates into workdays (coded as 1) and non-workdays (coded as 0) from January 1, 2022, to December 31, 2024. The Danish holiday is taken from [Publicholidays](https://publicholidays.dk/da/2024-dates/) and the dataset is made manually by the group. 
 
-See corresponding functions for data extraction in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features). The functions includes the initial API call and the following data preprocessing of the data.
+See corresponding functions for data extraction in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features). The functions include the initial API call and the following data preprocessing of the data.
 
 **Feature groups:**
 
@@ -49,7 +49,7 @@ The notebook is divided into the following sections:
 1. Parsing new data of today of hourly electricity prices and forecast weather measurements.
 2. Inserting the new data into the Feature Store.
 
-The same API call is used for the electricity prices as in `1_feature_backfill`, just changing the historical setting to `false` so the fetched data is from real time. To provide real-time weather measures, a weather forecast measure for the next 5 days is being fetched.
+The same API call is used for the electricity prices as in `1_feature_backfill`, just changing the historical setting to `false` so the fetched data is from real-time. To provide real-time weather measures, a weather forecast measure for the next 5 days is being fetched.
 
 Uploading the new data to the feature groups created previously in `1_feature_backfill`.
 
@@ -65,7 +65,7 @@ This notebook is divided into the following sections:
 
 **Feature selection:**
 
-Initially, the features that should be included for model training were selected. Based on the specified `primary_keys` in `1_feature_backfill`, the feature groups were joined together. For `electricity_fg` and `danish_calendar_fg`, all columns are selected. However, for `weather_fg`, `timestamp`, `datetime`, and `hour` are not selected since these three features are already a part of the `electricity_fg`.
+Initially, the features that should be included for model training were selected. The feature groups were joined together based on the specified `primary_keys` in `1_feature_backfill`. For `electricity_fg` and `danish_calendar_fg`, all columns are selected. However, for `weather_fg`, `timestamp`, `datetime`, and `hour` are not selected since these three features are already a part of the `electricity_fg`.
 
 **Feature View:**
 
@@ -73,11 +73,11 @@ A Feature View was created based on the joined feature groups. A Feature View st
 
 **Traning Dataset Creation:**
 
-Creating the training/test split data was first retrieved from the Hopsworks Feature Store where the feature view was stored. The training data was then randomly split into 80% assigned to training and the remaining 20% is left out for testing and evaluating the performance of the model. A `random_state` was set to ensure reproducibility.
+Creating the training/test split data was first retrieved from the Hopsworks Feature Store where the feature view was stored. The training data was then randomly split into 80% assigned to training and the remaining 20% was left out for testing and evaluating the model's performance. A `random_state` was set to ensure reproducibility.
 
 **Traning Prediction Model:**
 
-From the XGBoost Python Package, XGBoost Regressor was initialized as the model used for training and testing. The model is fitted to the train data and further evaluated on test data using validation metrics from the sklearn library. 
+From the XGBoost Python Package, the XGBoost Regressor was initialized as the model used for training and testing. The model is fitted to the train data and further evaluated on test data using validation metrics from the sklearn library. 
 
 | Validation metrics   | Value   |
 |----------------------|---------|
@@ -87,7 +87,7 @@ From the XGBoost Python Package, XGBoost Regressor was initialized as the model 
  
 The results are illustrated above and indicate that the model has a fairly good performance when it comes to predicting new electricity prices. It has relatively low error (both in terms of MSE and MAE), and a high percentage of the variance in the dependent variable is explained by the feature variables, as indicated by the high R-squared value.
 
-Further a plot showing the feature importance was created. Features like `temperature`, `day`, `hour` and `month` are most important for predicting the dependent variable. 
+Further, a plot showing the feature importance was created. Features like `temperature`, `day`, `hour`, and `month` are most important for predicting the dependent variable. 
 
 **Register the model:**
 
@@ -102,7 +102,7 @@ This notebook is divided into the following sections:
 
 **Load new batch data:**
 
-The objective is to predict the electricity prices for the upcoming days, therefore a weather forecast was loaded as batch data to generate predictions of the electricity price. This dataframe is merged with the calendar dataframe to obtain the same schema as the traning data. This batch obtains daily weather measures forecast for the upcoming 5 days after the run (e.g., a run on May 7th will fetch values 5 days ahead including May 12th).
+The objective is to predict the electricity prices for the upcoming days, therefore a weather forecast was loaded as batch data to generate predictions of the electricity price. This dataframe is merged with the calendar dataframe to obtain the same schema as the training data. This batch obtains daily weather measures forecast for the upcoming 5 days after the run (e.g., a run on May 7th will fetch values 5 days ahead including May 12th).
 
 **Predicting of Electricity Prices:**
 
@@ -116,8 +116,9 @@ A script is set up to run the feature and batch inference pipeline and a Github 
 # Future Work Considerations:
 
 - Automatically calendar df to futureproof the project.
-- Average weather data splitting Denmark into area DK1 and DK2 and not only Aalborg.
-- More pages in Streamlit App for implementing project considerations and metod into the application.
-- Implement both DK1 and DK2 area in the prediction system and Streamlit application.
+- Average weather data splitting Denmark into areas DK1 and DK2 and not only Aalborg.
+- More pages in Streamlit App for implementing project considerations and methods into the application.
+- Implement both DK1 and DK2 areas in the prediction system and Streamlit application.
 - Maybe look into backtesting for splitting the dataset and not randomly splitting.
-- Making a LLM model for more userfriendly interaction.
+- Making an LLM model for more user-friendly interaction.
+- Including tariffs and taxes to make the predictions more representable for the consumer.
