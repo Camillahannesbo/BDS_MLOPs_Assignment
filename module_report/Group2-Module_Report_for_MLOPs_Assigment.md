@@ -1,6 +1,6 @@
 # <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**Msc. BDS Module - Data Engineering and Machine Learning Operations in Business (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;"> - Exam Assignment</span>
 
-# Topic Title: Electricity Price Predicter for Denmark DK1 
+# Topic Title: Electricity Price Predictor for Denmark DK1 
 
 ## Group 2 Members
 | Name                     | Student ID |
@@ -18,7 +18,7 @@ The objective is to build a prediction system that predicts the daily electricit
 # Data Pipeline 
 The prediction system is built using several features, training, and inference pipelines. [Hopsworks](https://www.hopsworks.ai) is used as the platform to store features in the **Hopworks Feature Store** and save the trained model in **Hopworks Model Registry**. The overall architecture of the Electricity Pipeline is illustrated below. Inspiration is taken from [MLOPs Lecture 2](https://github.com/saoter/SDS24_MLOps_L1/blob/main//MLOps_Lecture_2_slides.pdf).
 
-![electricity_pipeline.png](images/electricity_pipeline.png)
+![electricity_pipeline.png](../images/electricity_pipeline.png)
 
 ## Feature Backfill
 Implemented in [notebooks/1_feature_backfill.ipynb](https://github.com/Camillahannesbo/MLOPs-Assignment-/blob/main/notebooks/1_feature_backfill.ipynb). 
