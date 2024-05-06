@@ -57,9 +57,9 @@ We initialize the XGBoost Regressor as the model used for training and predictio
 
 | Validation metrics   | Value    |
 |----------------------|----------|
-| MSE                  | 0.002    |
-| R^2                  | 0.978    |
-| MAE                  | 0.040    |
+| MSE                  | 0.059    |
+| R^2                  | 0.933    |
+| MAE                  | 0.166    |
 
 ## Frontend Application on 🤗 Hugging Face Spaces:
 We have made a functional frontend application that visually demonstrates the project’s application in real-world scenarios (Streamlit app hosted on [Huggingface](https://huggingface.co/spaces/Camillahannesbo/Electricity_price))

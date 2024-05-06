@@ -79,11 +79,11 @@ Creating the training/test split data was first retrieved from the Hopsworks Fea
 
 From the XGBoost Python Package, the XGBoost Regressor was initialized as the model used for training and testing. The model is fitted to the train data and further evaluated on test data using validation metrics from the sklearn library. 
 
-| Validation metrics   | Value   |
-|----------------------|---------|
-| MSE                  | 0.002   |
-| R^2                  | 0.970   |
-| MAE                  | 0.041   |
+| Validation metrics   | Value    |
+|----------------------|----------|
+| MSE                  | 0.059    |
+| R^2                  | 0.933    |
+| MAE                  | 0.166    |
  
 The results are illustrated above and indicate that the model has a fairly good performance when it comes to predicting new electricity prices. It has relatively low error (both in terms of MSE and MAE), and a high percentage of the variance in the dependent variable is explained by the feature variables, as indicated by the high R-squared value.
 
