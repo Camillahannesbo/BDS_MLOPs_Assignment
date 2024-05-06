@@ -1,23 +1,12 @@
 # PART 1: Importing the necessary libraries
 import streamlit as st
-from streamlit_folium import st_folium
 import pandas as pd
 import hopsworks 
-
 import joblib
-import datetime
-
 import altair as alt
-import plotly.express as px
 
-import os
-import folium
-
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-
-# Now we import the functions from the features folder
-# This is the functions we have created to generate features for electricity prices and weather measures
-from features import electricity_prices, weather_measures, calendar 
+# Import the functions from the features folder. This is the functions we have created to generate features for weather measures and calendar
+from features import weather_measures, calendar 
 
 # PART 2: Defining the functions for the Streamlit app
 def print_fancy_header(text, font_width="bold", font_size=22, color="#2656a3"):
@@ -38,9 +27,11 @@ def login_hopswork():
 
 @st.cache_data()
 def get_feature_view():
+    project = hopsworks.login()
+    fs = project.get_feature_store()
     feature_view = fs.get_feature_view(
-        name = 'electricity_training_feature_view',
-        version = 1
+        name='electricity_training_feature_view',
+        version=1
     )
 
     return feature_view
@@ -149,7 +140,7 @@ Learning Objectives:
 """
 )
                  
-with st.expander("📝 **This assigment**"):
+with st.expander("📝 **This assignment**"):
                 st.markdown("""
 The objective of this assignment is to build a prediction system that predicts the electricity prices in Denmark (area DK1) based on weather conditions, previous prices, and the Danish holidays.
 """

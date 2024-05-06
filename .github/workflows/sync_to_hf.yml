@@ -1,10 +1,10 @@
-name: Sync to Hugging Face hub
+name: sync_to_hf_hub
 on:
 
   # To run this workflow manually from the Actions tab
   workflow_dispatch:
 
-  # Schedule the workflow to run at 23:59 everyday
+  # Schedule the workflow to run at 02:01 UTC everyday
   schedule:
     - cron: '01 02 * * *' 
   

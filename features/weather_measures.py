@@ -10,7 +10,8 @@ def historical_weather_measures(historical: bool = False, lat: float = 57.048, l
     Parameters:
     - historical (bool): If True, fetches historical data from start date to end date. If False, fetches data for the current day. Default is False.
     - latitude and longitude: Default to coordinates to Aalborg.
-    - start and end date is default to 'Yesterday' - 'Today'.
+    - start (str): Define a start date for the API call. Defaul is 'Yesterday'.
+    - end (str): Define a end date for the API call. Default is 'Today'.
 
     Returns:
     - pd.DataFrame: DataFrame with weather data for defined area.
@@ -33,7 +34,6 @@ def historical_weather_measures(historical: bool = False, lat: float = 57.048, l
     # Extract date from the 'time' column and convert it to datetime format
     df["date"] = df['time'].str[:10]
     df['datetime'] = pd.to_datetime(df['time'])
-    # df['time'] = pd.to_datetime(df['datetime']).dt.time
     df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
     # Filter the DataFrame based on whether historical data is requested or not
@@ -61,6 +61,7 @@ def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast
 
     Parameters:
     - latitude and longitude: Default to coordinates to Aalborg.
+    - forecast_length: Defining the length of the weather forecast. Default is 1 day.
 
     Returns:
     - pd.DataFrame: DataFrame with weather forecast for defined area.
@@ -81,7 +82,6 @@ def forecast_weather_measures(lat: float = 57.048, lon: float = 9.9187, forecast
     # Extract date from the 'time' column and convert it to datetime format
     df["date"] = df['time'].str[:10]
     df['datetime'] = pd.to_datetime(df['time'])
-    # df['time'] = pd.to_datetime(df['datetime']).dt.time
     df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
     # Convert datetime to timestamp in milliseconds and add it as a new column

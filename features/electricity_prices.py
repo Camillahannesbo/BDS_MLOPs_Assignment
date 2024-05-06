@@ -9,7 +9,7 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
 
     Parameters:
     - historical (bool): If True, fetches historical data from start date to end date. If False, fetches data for the current day. Default is False.
-    - start (str): Define a start date for the API call. Defaul is 'Yesterday'.
+    - start (str): Define a start date for the API call. Default is 'Yesterday'.
     - end (str): Define a end date for the API call. Default is 'Today'.
     
     Returns:
@@ -26,15 +26,14 @@ def electricity_prices(historical: bool = False, area: list = None, start: str =
                 'sort': 'HourUTC DESC'
             })
 
+    # Extract JSON data from the response and make a DataFrame
     data = r.json()['records']
     df = pd.DataFrame(data)
 
     # Format date and time
     df["date"] = df["HourDK"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
     df['datetime'] = pd.to_datetime(df['HourDK'])
-    # df['time'] = pd.to_datetime(df['datetime']).dt.time
     df['hour'] = pd.to_datetime(df['datetime']).dt.hour
-
 
     # Divide the price to KWH
     df['SpotPriceDKK_KWH'] = df['SpotPriceDKK'] / 1000
@@ -114,7 +113,6 @@ def forecast_renewable_energy(historical: bool = False, area: str = None, start:
     # Format date and time
     df["date"] = df["HourDK"].map(lambda x: datetime.strptime(x, '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d"))
     df['datetime'] = pd.to_datetime(df['HourDK'])
-    # df['time'] = pd.to_datetime(df['datetime']).dt.time
     df['hour'] = pd.to_datetime(df['datetime']).dt.hour
 
     # Drop unnecessary columns

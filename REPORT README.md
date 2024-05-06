@@ -1,15 +1,19 @@
-# <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**BDS MODULE 4 - DATA ENGINEERING AND MACHINE LEARNING OPERATIONS IN BUSINESS (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;">- EXAM ASSIGMENT</span>
-Report file elaborating on the process
+# <span style="font-width:bold; font-size: 3rem; color:#2656a3;">**Msc. BDS Module - Data Engineering and Machine Learning Operations in Business (MLOPs)** </span> <span style="font-width:bold; font-size: 3rem; color:#333;"> - Exam Assignment</span>
 
-# Topic title: Electricity Price Predicter for Denmark DK1 
+# Topic Title: Electricity Price Predicter for Denmark DK1 
+
+## Group 2 Members
+| Name                     | Student ID |
+|--------------------------|------------|
+| Camilla Dyg Hannesbo     | 20202923   |
+| Benjamin Ly              | 20205432   |
+| Tobias Moesgård Jensen   | 20231658   |
+
 ## Business Problem
-In recent times, energy prices have experienced a notable surge, prompting consumers and businesses alike to scrutinize their energy consumption patterns more closely than ever before. This surge in energy prices has not only heightened awareness regarding energy usage but has also sparked a renewed interest in identifying the optimal times for energy consumption. As consumers seek to navigate this landscape of rising energy costs, understanding when the best times are for utilizing energy becomes paramount. By pinpointing these optimal periods, individuals and organizations can strategically adjust their energy usage patterns to minimize costs while maximizing efficiency.
-
-   > Mangler noget reference?
+In recent times, energy prices have experienced a notable surge, prompting consumers and businesses alike to scrutinize their energy consumption patterns more closely than ever before. This surge in energy prices has not only heightened awareness regarding energy usage but has also sparked a renewed interest in identifying the optimal times for energy consumption. As consumers seek to navigate this landscape of rising energy costs, understanding when the best times are for utilizing energy becomes paramount. By pinpointing these optimal periods, individuals and organizations can strategically adjust their energy usage patterns to minimize costs while maximizing efficiency. ([Reference](https://www.sciencedirect.com/science/article/pii/S0306261919305380?casa_token=_hhzNcNsAigAAAAA:oG1cTP_L08OHxMEK3bByPppiE4EIYplXzdl5BEBxSZHgbxvN4KMbmRGW5RVIDmp2z-J9LjBIT3o))
 
 ### Objectives
-The objective is to build a prediction system that predicts the daily electricity prices per hour in Denmark (area DK1) based on weather conditions, previous prices, and the Danish calendar. This will end up in a frontend application there ultimately can help the user decide when is the best time to charge the electric vehicle or have production running - leading to potential cost savings or profit maximization. 
-The application can be relevant for both individual clients and in a larger business perspective.  
+The objective is to build a prediction system that predicts the daily electricity prices per hour in Denmark (area DK1) based on weather conditions, previous prices, and the Danish calendar. Each day the dataset will automaticly update by using live API calls to the relevant datasources. This will end up in a frontend application there ultimately can help the user decide when is the best time to charge the electric vehicle or have production running. The application can be relevant for both individual clients and in a larger business perspective.
 
 # Data Pipeline 
 The prediction system is built using several features, training, and inference pipelines. [Hopsworks](https://www.hopsworks.ai) is used as the platform to store features in the **Hopworks Feature Store** and save the trained model in **Hopworks Model Registry**. The overall architecture of the Electricity Pipeline is illustrated below. Inspiration is taken from [MLOPs Lecture 2](https://github.com/saoter/SDS24_MLOps_L1/blob/main//MLOps_Lecture_2_slides.pdf).
@@ -24,19 +28,19 @@ The notebook is divided into the following sections:
 2. Connecting to Hopsworks Feature Store
 3. Creating feature groups and uploading them to the feature store
 
-**The data used comes from different sources:**
+**Data sources:**
 
-- Hourly electricity spot prices in DKK per day from [Energinet](https://www.energidataservice.dk).
-   - Historical electricity prices for area DK1 starting from January 1, 2022, up until the present day. Today is not included since it is not historical data. 
+Historical data on hourly electricity spot prices for area DK1 in DKK per day, sourced from [Energinet](https://www.energidataservice.dk), spans from January 1, 2022, until the present day, excluding today's data. 
 
-- Different meteorological observations based on Aalborg Denmark from [Open Meteo](https://www.open-meteo.com). 
-   - Historical weather measurements based on the location of Aalborg, Denmark starting from January 1, 2022, up until the present day. 
+Meteorological observations for Aalborg, Denmark, sourced from [Open Meteo](https://www.open-meteo.com), cover the same period, providing insights into weather conditions for Aalborg, Denmark. 
 
-- Danish calendar that categorizes dates into types based on whether it is a workday or not. This file is made manually by the group. 
-   - The calendar data stretches from 2022-01-01 until 2024-12-31. 
-   - Workday is represented by 1 and not a workday is represented by 0.
+Additionally, a Danish calendar classifies dates into workdays (coded as 1) and non-workdays (coded as 0) from January 1, 2022, to December 31, 2024. The Danish holiday is taken from [Publicholidays](https://publicholidays.dk/da/2024-dates/) and the dataset is made manually by the group. 
 
-Creating feature groups for the three datasets defining a `primary_key` as `date` and `timestamp`, so we can join them when we create a dataset for training in part 03 training_pipeline. The feature groups are uploaded to the Feature Store that has been connected in Hopsworks.
+See corresponding functions for data extraction in the folder [features](https://github.com/Camillahannesbo/MLOPs-Assignment-/tree/main/features). The functions includes the initial API call and the following data preprocessing of the data.
+
+**Feature groups:**
+
+Creating feature groups for the three datasets defining a `primary_key` as `date` and `timestamp`, so the feature groups can be joined when creating a dataset for training in part `3_training_pipeline`. The feature groups are uploaded to the Feature Store that has been connected in Hopsworks.
 
 ## Feature Pipeline
 Implemented in [notebooks/2_feature_pipeline.ipynb](https://github.com/Camillahannesbo/MLOPs-Assignment-/blob/main/notebooks/2_feature_pipeline.ipynb). 
@@ -45,9 +49,9 @@ The notebook is divided into the following sections:
 1. Parsing new data of today of hourly electricity prices and forecast weather measurements.
 2. Inserting the new data into the Feature Store.
 
-The same API call for the electricity prices as in Feature Backfill, just changing the historical setting to `false` so the fetched data is from real time. To provide real-time weather measures, a weather forecast measure for the next 5 days is being fetched.
+The same API call is used for the electricity prices as in `1_feature_backfill`, just changing the historical setting to `false` so the fetched data is from real time. To provide real-time weather measures, a weather forecast measure for the next 5 days is being fetched.
 
-Uploading the new data to the feature groups created previously in Feature Backfill.
+Uploading the new data to the feature groups created previously in `1_feature_backfill`.
 
 ## Training Pipeline
 Implemented in [notebooks/3_training_pipeline.ipynb](https://github.com/Camillahannesbo/MLOPs-Assignment-/blob/main/notebooks/3_training_pipeline.ipynb). 
@@ -59,36 +63,61 @@ This notebook is divided into the following sections:
 4. Training the model.
 5. Register the model to the Hopsworks Model Registry.
 
-We first select the features that we want to include for model training and based on the specified `primary_key`, `date`, and `timestamp`, in part 01_feature_backfill we can now join features together for the `electricity_fg`, `weather_fg`, and `Danish_holiday_fg`. For `electricity_fg` and `Danish_holiday_fg` all columns are selected. For `weather_fg`, "timestamp", "datetime", and "hour" is not selected since they do not directly contribute to predicting electricity prices now that we have joined the feature groups based on the `primary_key`. Сombining **Feature Groups** we can then create a **Feature View** which stores a metadata of our data. Having the **Feature View** we can create a **Training Dataset**.
+**Feature selection:**
 
-Creating the training/test split data is first retrieved from the Hopsworks Feature Store where we stored the feature view. The training data is then split into 80% assigned to training and the remaining 20% is left out for testing and evaluating the performance of the model.
+Initially, the features that should be included for model training were selected. Based on the specified `primary_keys` in `1_feature_backfill`, the feature groups were joined together. For `electricity_fg` and `danish_calendar_fg`, all columns are selected. However, for `weather_fg`, `timestamp`, `datetime`, and `hour` are not selected since these three features are already a part of the `electricity_fg`.
 
-From the xgboost Python Package, we initialize the XGBoost Regressor as the model used for training and prediction. The model is fitted to the train data and further evaluated using validation metric functions from the sklearn library. The results are illustrated below and indicate that the model has a fairly good performance when it comes to predicting new electricity prices. 
+**Feature View:**
 
-| Validation metrics       |  |
-|----------------------|----------|
-| ⛳️ MSE               | 0.0022   |
-| ⛳️ RMSE              | 0.0471   |
-| ⛳️ R^2               | 0.9708   |
-| ⛳️ MAE               | 0.04100  |
+A Feature View was created based on the joined feature groups. A Feature View stores a metadata of our data. Having the Feature View a Training Dataset can further be created.
 
-We further look into the feature importances using the plot_importance function from XGBoost, here ....
+**Traning Dataset Creation:**
 
-A schema of the model's input and output is specified from training examples using the features (X_train) and target variable (y_train). An entry of the specified details is then created and the model is uploaded to the Hopsworks Model Registry.
+Creating the training/test split data was first retrieved from the Hopsworks Feature Store where the feature view was stored. The training data was then randomly split into 80% assigned to training and the remaining 20% is left out for testing and evaluating the performance of the model. A `random_state` was set to ensure reproducibility.
 
-## Inference Pipeline
+**Traning Prediction Model:**
+
+From the XGBoost Python Package, XGBoost Regressor was initialized as the model used for training and testing. The model is fitted to the train data and further evaluated on test data using validation metrics from the sklearn library. 
+
+| Validation metrics   | Value   |
+|----------------------|---------|
+| MSE                  | 0.002   |
+| R^2                  | 0.970   |
+| MAE                  | 0.041   |
+ 
+The results are illustrated above and indicate that the model has a fairly good performance when it comes to predicting new electricity prices. It has relatively low error (both in terms of MSE and MAE), and a high percentage of the variance in the dependent variable is explained by the feature variables, as indicated by the high R-squared value.
+
+Further a plot showing the feature importance was created. Features like `temperature`, `day`, `hour` and `month` are most important for predicting the dependent variable. 
+
+**Register the model:**
+
+A schema of the model's input and output is specified from training examples using the features (X_train) and dependent variable (y_train). An entry of the specified details is then created and the model is uploaded to the Hopsworks Model Registry.
+
+## Batch Inference Pipeline
 Implemented in [notebooks/4_batch_inference.ipynb](https://github.com/Camillahannesbo/MLOPs-Assignment-/blob/main/notebooks/4_batch_inference.ipynb).
 
 This notebook is divided into the following sections:
 1. Load new batch data.
 2. Predict using the model from the Model Registry.
 
-Our objective is to predict the electricity prices for the upcoming days, therefore we load a weather forecast as batch data to generate predictions. This dataframe is merged with the calendar dataframe. 
-This batch obtains daily weather measures forecast for the upcoming 5 days after the run (e.g., a run on May 7th will fetch values 5 days ahead including May 12th).
+**Load new batch data:**
 
-The saved XGBmodel is retrieved and used on the new merged data to predict the electricity prices in the upcoming 5 days. 
+The objective is to predict the electricity prices for the upcoming days, therefore a weather forecast was loaded as batch data to generate predictions of the electricity price. This dataframe is merged with the calendar dataframe to obtain the same schema as the traning data. This batch obtains daily weather measures forecast for the upcoming 5 days after the run (e.g., a run on May 7th will fetch values 5 days ahead including May 12th).
 
-Along with a prediction matrix on hourly intervals, the batch pipeline also includes a time-series plot visualizing the trend of the spot price (in DKK) for DK1 over the prediction time. An interactive version of this in the form of a line chart with points is also created enabling users to explore the data and gain insights interactively.
+**Predicting of Electricity Prices:**
+
+The saved XGBoost Regressor model was retrieved from Hopsworks and used on the new merged data to predict the electricity prices in the upcoming 5 days. 
+
+Along with a prediction matrix on hourly intervals, the `4_batch_inference` pipeline also includes a time-series plot visualizing the trend of the spot price (in DKK) for DK1 over the prediction time. An interactive version of this in the form of a line chart with points and tooltips is also created enabling users to explore the data and gain insights interactively.
 
 The feature pipeline and batch inference run daily as a scheduled function using Github Actions. 
-A script is set up to run the feature and batch inference pipeline and a Github Action workflow is scheduled to run the script at 23:50 everyday. Another workflow is scheduled to run at 23:59 everyday to sync the features and predictions made daily up to Huggingface Spaces. 
+A script is set up to run the feature and batch inference pipeline and a Github Action workflow is scheduled to run the script at 01:55 UTC everyday. Another workflow is scheduled to run at 02:01 UTC everyday to sync the Github Repository to Huggingface Spaces. 
+
+# Future Work Considerations:
+
+- Automatically calendar df to futureproof the project.
+- Average weather data splitting Denmark into area DK1 and DK2 and not only Aalborg.
+- More pages in Streamlit App for implementing project considerations and metod into the application.
+- Implement both DK1 and DK2 area in the prediction system and Streamlit application.
+- Maybe look into backtesting for splitting the dataset and not randomly splitting.
+- Making a LLM model for more userfriendly interaction.

@@ -1,11 +1,10 @@
-name: electricity-feature-and-prediction-pipelines
-
+name: electricity_feature_and_prediction_pipelines
 on:
 
   # To run this workflow manually from the Actions tab
   workflow_dispatch:
 
-  # Schedule the workflow to run at 23:50 everyday
+  # Schedule the workflow to run at 01:55 UTC everyday
   schedule:
    - cron: '55 01 * * *'
 

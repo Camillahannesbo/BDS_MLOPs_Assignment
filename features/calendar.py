@@ -7,9 +7,6 @@ def dk_calendar() -> pd.DataFrame:
     """
     Fetches calendar for Denmark.
 
-    Parameters:
-    - ....
-
     Returns:
     - pd.DataFrame: DataFrame with danish calendar.
     """
